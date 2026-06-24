@@ -35,9 +35,18 @@ public class Enemy : MonoBehaviour
     [Header("スタン時間")]
     [SerializeField] private float stunTimer = 2.0f;
 
+    [SerializeField] private Animator animator;
+
+    [Header("HP")]
+    [SerializeField] private int maxHP = 100;
+
+    public int CurrentHP { get; private set; }
+
     void Start()
     {
         CurrentState = EnemyState.Idle;
+
+        CurrentHP = maxHP;
 
         StartCoroutine(AttackRoutine());
     }
@@ -66,6 +75,7 @@ public class Enemy : MonoBehaviour
             yield return new WaitForSeconds(1f);
 
             CurrentState = EnemyState.Attack;
+            animator.SetTrigger("Attack");
 
             if(ISSuccessDodge())
             {
@@ -78,6 +88,8 @@ public class Enemy : MonoBehaviour
             else
             {
                 Debug.Log("Hit");
+
+                player.TakeDamage(10);
 
                 CurrentState = EnemyState.Idle;
             }
@@ -117,6 +129,24 @@ public class Enemy : MonoBehaviour
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// ダメージ関数
+    /// </summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(int damage)
+    {
+        CurrentHP -= damage;
+
+        if (CurrentHP <= 0)
+        {
+            CurrentHP = 0;
+
+            CurrentState = EnemyState.Dead;
+
+            Debug.Log("Enemy Dead");
+        }
     }
 
     // 一時的に追加

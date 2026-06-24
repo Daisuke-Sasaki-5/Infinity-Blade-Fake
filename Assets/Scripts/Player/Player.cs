@@ -31,12 +31,19 @@ public class Player : MonoBehaviour
     [SerializeField] private Animator animator;
     [SerializeField] private Enemy enemy;
 
+    [Header("HP")]
+    [SerializeField] private int maxHP = 100;
+
+    public int CurrentHP {  get; private set; }
+
     // 攻撃中フラグ
     private bool isAttacking;
 
     private void Start()
     {
         CurrentState = PlayerState.Idle;
+
+        CurrentHP = maxHP;
     }
 
     public void Attack()
@@ -58,6 +65,8 @@ public class Player : MonoBehaviour
         animator.SetTrigger("Attack");
 
         Debug.Log("Attack Success");
+
+        enemy.TakeDamage(20);
 
         CurrentState = PlayerState.Attack;
 
@@ -125,5 +134,23 @@ public class Player : MonoBehaviour
         }
 
         Debug.Log("Guard End");
+    }
+
+    /// <summary>
+    /// ダメージ関数
+    /// </summary>
+    /// <param name="damage"></param>
+    public void TakeDamage(int damage)
+    {
+        CurrentHP -= damage;
+
+        if (CurrentHP <= 0)
+        {
+            CurrentHP = 0;
+
+            CurrentState = PlayerState.Dead;
+
+            Debug.Log("Player Dead");
+        }
     }
 }
