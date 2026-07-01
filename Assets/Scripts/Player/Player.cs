@@ -34,7 +34,12 @@ public class Player : MonoBehaviour
     [Header("HP")]
     [SerializeField] private int maxHP = 100;
 
+    [Header("ヒットエフェクト")]
+    [SerializeField] private GameObject effectPrefab;
+
     public int CurrentHP {  get; private set; }
+
+    public int MaxHP => maxHP;
 
     // 攻撃中フラグ
     private bool isAttacking;
@@ -66,20 +71,16 @@ public class Player : MonoBehaviour
 
         Debug.Log("Attack Success");
 
-        enemy.TakeDamage(20);
-
         CurrentState = PlayerState.Attack;
-
-        StartCoroutine(EndAttack());
     }
 
-    private IEnumerator EndAttack()
+    public void EndAttack()
     {
-        yield return new WaitForSeconds(1.0f);
-
         CurrentState = PlayerState.Idle;
 
         isAttacking = false;
+
+        Debug.Log("END");
     }
 
     /// <summary>
@@ -122,6 +123,7 @@ public class Player : MonoBehaviour
     public void StartGuard()
     {
         CurrentState = PlayerState.Guard;
+        animator.SetBool("Guard", true);
 
         Debug.Log("Guard");
     }
@@ -131,6 +133,7 @@ public class Player : MonoBehaviour
         if(CurrentState == PlayerState.Guard)
         {
             CurrentState = PlayerState.Idle;
+            animator.SetBool("Guard", false);
         }
 
         Debug.Log("Guard End");
@@ -152,5 +155,12 @@ public class Player : MonoBehaviour
 
             Debug.Log("Player Dead");
         }
+    }
+
+    public void OnAttackHit()
+    {
+        enemy.TakeDamage(20);
+        Vector3 effectPos = enemy.transform.position + Vector3.up * 1.2f;
+        Instantiate(effectPrefab, effectPos, Quaternion.identity);
     }
 }

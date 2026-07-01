@@ -42,6 +42,8 @@ public class Enemy : MonoBehaviour
 
     public int CurrentHP { get; private set; }
 
+    public int MaxHP => maxHP;
+
     void Start()
     {
         CurrentState = EnemyState.Idle;
@@ -67,8 +69,8 @@ public class Enemy : MonoBehaviour
             CurrentState = EnemyState.PrepareAttack;
 
             // UŒ‚•ûŒü‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ
-           // CurrentAttackDirection = (EnemyAttackDirection)UnityEngine.Random.Range(1, 4);
-            CurrentAttackDirection = EnemyAttackDirection.Center;
+            CurrentAttackDirection = (EnemyAttackDirection)UnityEngine.Random.Range(1, 4);
+            //CurrentAttackDirection = EnemyAttackDirection.Center;
 
             Debug.Log("Enemy Prepare : Left");
 
