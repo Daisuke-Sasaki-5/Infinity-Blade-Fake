@@ -146,8 +146,15 @@ public class Enemy : MonoBehaviour
 
             CurrentState = EnemyState.Dead;
 
+            animator.SetTrigger("Dead");
+
             Debug.Log("Enemy Dead");
         }
+    }
+
+    public void IsDead()
+    {
+        GameManager.instance.Win();
     }
 
     // ˆêŽž“I‚É’Ç‰Á

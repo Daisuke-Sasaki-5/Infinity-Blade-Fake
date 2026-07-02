@@ -153,6 +153,8 @@ public class Player : MonoBehaviour
 
             CurrentState = PlayerState.Dead;
 
+            animator.SetTrigger("Dead");
+
             Debug.Log("Player Dead");
         }
     }
@@ -162,5 +164,10 @@ public class Player : MonoBehaviour
         enemy.TakeDamage(20);
         Vector3 effectPos = enemy.transform.position + Vector3.up * 1.2f;
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
+    }
+
+    public void IsDead()
+    {
+        GameManager.instance.Lose();
     }
 }
