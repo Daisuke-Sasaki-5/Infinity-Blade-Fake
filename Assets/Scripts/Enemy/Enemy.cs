@@ -70,9 +70,8 @@ public class Enemy : MonoBehaviour
 
             // UŒ‚•ûŒü‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‘ğ
             CurrentAttackDirection = (EnemyAttackDirection)UnityEngine.Random.Range(1, 4);
-            //CurrentAttackDirection = EnemyAttackDirection.Center;
 
-            Debug.Log("Enemy Prepare : Left");
+            Debug.Log("Enemy Attack");
 
             yield return new WaitForSeconds(1f);
 
