@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 /// <summary>
 /// EnemyState
@@ -40,6 +41,9 @@ public class Enemy : MonoBehaviour
     [Header("HP")]
     [SerializeField] private int maxHP = 100;
 
+    [Header("ヒットエフェクト")]
+    [SerializeField] private GameObject effectPrefab;
+
     public int CurrentHP { get; private set; }
 
     public int MaxHP => maxHP;
@@ -77,23 +81,6 @@ public class Enemy : MonoBehaviour
 
             CurrentState = EnemyState.Attack;
             animator.SetTrigger("Attack");
-
-            if(ISSuccessDodge())
-            {
-                Debug.Log("Success");
-
-                StartCoroutine(StunRoutine());
-
-                player.ClearDodge();
-            }
-            else
-            {
-                Debug.Log("Hit");
-
-                player.TakeDamage(10);
-
-                CurrentState = EnemyState.Idle;
-            }
         } 
     }
 
@@ -140,6 +127,7 @@ public class Enemy : MonoBehaviour
     {
         CurrentHP -= damage;
 
+        // HPが０になったとき
         if (CurrentHP <= 0)
         {
             CurrentHP = 0;
@@ -150,6 +138,26 @@ public class Enemy : MonoBehaviour
 
             Debug.Log("Enemy Dead");
         }
+    }
+
+    public void OnAttackHit()
+    {
+        if (ISSuccessDodge())
+        {
+            Debug.Log("Success");
+
+            StartCoroutine(StunRoutine());
+
+            player.ClearDodge();
+
+            return;
+        }
+
+        player.TakeDamage(10);
+        Vector3 effectPos = player.transform.position + Vector3.up * 1.1f;
+        Instantiate(effectPrefab, effectPos, Quaternion.identity);
+
+        CurrentState = EnemyState.Idle;
     }
 
     public void IsDead()

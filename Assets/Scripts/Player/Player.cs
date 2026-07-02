@@ -146,6 +146,7 @@ public class Player : MonoBehaviour
     public void TakeDamage(int damage)
     {
         CurrentHP -= damage;
+        CameraShake.instance.Shake();
 
         if (CurrentHP <= 0)
         {
@@ -161,7 +162,7 @@ public class Player : MonoBehaviour
 
     public void OnAttackHit()
     {
-        enemy.TakeDamage(20);
+        enemy.TakeDamage(10);
         Vector3 effectPos = enemy.transform.position + Vector3.up * 1.2f;
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
     }
