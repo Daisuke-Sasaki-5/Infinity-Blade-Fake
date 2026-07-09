@@ -33,9 +33,15 @@ public class Player : MonoBehaviour
 
     [Header("HP")]
     [SerializeField] private int maxHP = 100;
+    [Header("敵へのダメージ量")]
+    [SerializeField] private int damage = 20;
 
     [Header("ヒットエフェクト")]
     [SerializeField] private GameObject effectPrefab;
+
+    [Header("SE")]
+    [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioSource audioSource;
 
     public int CurrentHP {  get; private set; }
 
@@ -49,6 +55,8 @@ public class Player : MonoBehaviour
         CurrentState = PlayerState.Idle;
 
         CurrentHP = maxHP;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void Attack()
@@ -160,9 +168,17 @@ public class Player : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 敵にダメージを与える
+    /// </summary>
     public void OnAttackHit()
     {
-        enemy.TakeDamage(10);
+        enemy.TakeDamage(damage);
+
+        // ヒット音
+        audioSource.PlayOneShot(hitClip);
+
+        // エフェクトを出す
         Vector3 effectPos = enemy.transform.position + Vector3.up * 1.2f;
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
     }
