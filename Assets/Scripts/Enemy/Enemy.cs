@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using static UnityEngine.EventSystems.EventTrigger;
 
 /// <summary>
@@ -31,15 +32,20 @@ public class Enemy : MonoBehaviour
     public EnemyState CurrentState {  get; private set; }
     public EnemyAttackDirection CurrentAttackDirection {  get; private set; }
 
+    public float PrepareProgress {  get; private set; }
+
     [SerializeField] private Player player;
 
     [Header("スタン時間")]
     [SerializeField] private float stunTimer = 2.0f;
 
     [SerializeField] private Animator animator;
+    private bool attackFinished;
 
     [Header("HP")]
     [SerializeField] private int maxHP = 100;
+    [Header("プレイヤーへのダメージ量")]
+    [SerializeField] private int damage = 10;
 
     [Header("ヒットエフェクト")]
     [SerializeField] private GameObject effectPrefab;
@@ -70,18 +76,28 @@ public class Enemy : MonoBehaviour
 
             yield return new WaitForSeconds(3f);
 
-            CurrentState = EnemyState.PrepareAttack;
-
-            // 攻撃方向をランダムに選択
-            CurrentAttackDirection = (EnemyAttackDirection)UnityEngine.Random.Range(1, 4);
-
-            Debug.Log("Enemy Attack");
-
-            yield return new WaitForSeconds(1f);
-
-            CurrentState = EnemyState.Attack;
-            animator.SetTrigger("Attack");
+            yield return StartCoroutine(AttackSequence());
         } 
+    }
+
+    private IEnumerator AttackSequence()
+    {
+        attackFinished = false;
+
+        CurrentState = EnemyState.PrepareAttack;
+
+        // 攻撃方向をランダムに選択
+        CurrentAttackDirection = (EnemyAttackDirection)UnityEngine.Random.Range(1, 4);
+
+        Debug.Log("Enemy Attack");
+
+        animator.speed = 0.3f;
+        animator.SetTrigger("Attack");
+        yield return StartCoroutine(PrepareAttack(1));
+
+        CurrentState = EnemyState.Attack;
+
+        while (!attackFinished) yield return null;
     }
 
     private IEnumerator StunRoutine()
@@ -104,16 +120,19 @@ public class Enemy : MonoBehaviour
     /// <returns></returns>
     private bool ISSuccessDodge()
     {
+        bool timing = Time.time - player.LastDodgeTime <= 0.2f;
+        bool GuradTiming = Time.time - player.LastGuradTime <= 0.2f;
+
         switch (CurrentAttackDirection)
         {
             case EnemyAttackDirection.Left:
-                return player.LastDodgeDirection == DodgeDirection.Right;
+                return timing && player.LastDodgeDirection == DodgeDirection.Right;
 
             case EnemyAttackDirection.Right:
-                return player.LastDodgeDirection == DodgeDirection.Left;
+                return timing && player.LastDodgeDirection == DodgeDirection.Left;
 
             case EnemyAttackDirection.Center:
-                return player.CurrentState == PlayerState.Guard;
+                return GuradTiming && player.CurrentState == PlayerState.Guard;
         }
 
         return false;
@@ -149,20 +168,53 @@ public class Enemy : MonoBehaviour
             StartCoroutine(StunRoutine());
 
             player.ClearDodge();
+            player.EndGuard();
 
             return;
         }
 
-        player.TakeDamage(10);
+        DamagePlayer();
+    }
+
+    private void DamagePlayer()
+    {
+        player.TakeDamage(damage);
         Vector3 effectPos = player.transform.position + Vector3.up * 1.1f;
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
+    }
 
-        CurrentState = EnemyState.Idle;
+    private void FinishPrepare()
+    {
+        PrepareProgress = 1;
     }
 
     public void IsDead()
     {
         GameManager.instance.Win();
+    }
+
+    public void ResumeAttack()
+    {
+        animator.speed = 1f;
+        PrepareProgress = 0;
+        attackFinished = true;
+    }
+
+    private IEnumerator PrepareAttack(float prepareTime)
+    {
+        PrepareProgress = 0;
+
+        float timer = 0f;
+
+        while (timer < prepareTime)
+        {
+            timer += Time.deltaTime;
+            PrepareProgress = Mathf.Lerp(0f, 0.7f, timer / prepareTime);
+
+            yield return null;
+        }
+
+        PrepareProgress = 0.7f;
     }
 
     // 一時的に追加

@@ -2187,6 +2187,7 @@ MonoBehaviour:
   stunTimer: 2
   animator: {fileID: 1798924239}
   maxHP: 100
+  damage: 10
   effectPrefab: {fileID: 848807539254248473, guid: 41bc20e69bf836849b32cc01635a6357, type: 3}
 --- !u!95 &1798924239 stripped
 Animator:

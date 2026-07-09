@@ -28,6 +28,9 @@ public class Player : MonoBehaviour
     public PlayerState CurrentState { get; private set; }
     public DodgeDirection LastDodgeDirection { get; private set; }
 
+    public float LastDodgeTime { get; private set; }
+    public float LastGuradTime { get; private set; }
+
     [SerializeField] private Animator animator;
     [SerializeField] private Enemy enemy;
 
@@ -97,7 +100,7 @@ public class Player : MonoBehaviour
     public void DodgeLeft()
     {
         LastDodgeDirection = DodgeDirection.Left;
-
+        LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
 
         Debug.Log("Dodge Left");
@@ -109,7 +112,7 @@ public class Player : MonoBehaviour
     public void DodgeRight()
     {
         LastDodgeDirection = DodgeDirection.Right;
-
+        LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
 
         Debug.Log("Doge Right");
@@ -130,6 +133,7 @@ public class Player : MonoBehaviour
 
     public void StartGuard()
     {
+        LastGuradTime = Time.time;
         CurrentState = PlayerState.Guard;
         animator.SetBool("Guard", true);
 
