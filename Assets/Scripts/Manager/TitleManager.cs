@@ -5,6 +5,7 @@ using TMPro;
 using System;
 using System.Collections;
 using JetBrains.Annotations;
+using UnityEngine.InputSystem;
 
 public class TitleManager : MonoBehaviour
 {
@@ -20,6 +21,14 @@ public class TitleManager : MonoBehaviour
 
         // スタートテキストを点滅させる
         StartCoroutine(BlinkStartText());
+    }
+
+    private void Update()
+    {
+        if(Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
+        {
+            OnClickStart();
+        }
     }
 
     private IEnumerator BlinkStartText()

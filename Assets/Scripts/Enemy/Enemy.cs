@@ -50,6 +50,10 @@ public class Enemy : MonoBehaviour
     [Header("ヒットエフェクト")]
     [SerializeField] private GameObject effectPrefab;
 
+    [Header("SE")]
+    [SerializeField] private AudioClip hitClip;
+    [SerializeField] private AudioSource audioSource;
+
     public int CurrentHP { get; private set; }
 
     public int MaxHP => maxHP;
@@ -61,8 +65,14 @@ public class Enemy : MonoBehaviour
         CurrentHP = maxHP;
 
         StartCoroutine(AttackRoutine());
+
+        audioSource = GetComponent<AudioSource>();
     }
 
+    /// <summary>
+    /// 一定間隔で攻撃を繰り返すループ
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator AttackRoutine()
     {
         while (true)
@@ -85,6 +95,10 @@ public class Enemy : MonoBehaviour
         } 
     }
 
+    /// <summary>
+    /// 攻撃予兆から攻撃実行までの流れ
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator AttackSequence()
     {
         if (GameManager.instance.currentState == GameState.Win || GameManager.instance.currentState == GameState.Lose)
@@ -113,6 +127,10 @@ public class Enemy : MonoBehaviour
         while (!attackFinished) yield return null;
     }
 
+    /// <summary>
+    /// 一定時間スタン状態にする
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator StunRoutine()
     {
         CurrentState  = EnemyState.Stunned;
@@ -172,6 +190,9 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 攻撃アニメーションのヒットタイミングで呼ばれる
+    /// </summary>
     public void OnAttackHit()
     {
         if (ISSuccessDodge())
@@ -191,6 +212,9 @@ public class Enemy : MonoBehaviour
 
     private void DamagePlayer()
     {
+        // ヒットSE
+        audioSource.PlayOneShot(hitClip);
+
         player.TakeDamage(damage);
         Vector3 effectPos = player.transform.position + Vector3.up * 1.1f;
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
@@ -213,6 +237,11 @@ public class Enemy : MonoBehaviour
         attackFinished = true;
     }
 
+    /// <summary>
+    /// 攻撃予兆ゲージを時間経過で更新する
+    /// </summary>
+    /// <param name="prepareTime"></param>
+    /// <returns></returns>
     private IEnumerator PrepareAttack(float prepareTime)
     {
         PrepareProgress = 0;
@@ -231,13 +260,13 @@ public class Enemy : MonoBehaviour
     }
 
     // 一時的に追加
-    private void OnGUI()
-    {
-        GUI.Label(new Rect(20,150,500,50),$"Enemy : {CurrentState}{CurrentAttackDirection}");
+    //private void OnGUI()
+    //{
+    //    GUI.Label(new Rect(20,150,500,50),$"Enemy : {CurrentState}{CurrentAttackDirection}");
 
-        GUI.Label(
-            new Rect(20, 200, 500, 50),
-            $"Player : {player.CurrentState}"
-        );
-    }
+    //    GUI.Label(
+    //        new Rect(20, 200, 500, 50),
+    //        $"Player : {player.CurrentState}"
+    //    );
+    //}
 }

@@ -216,7 +216,7 @@ public class MobileInputVisualizer : MonoBehaviour
         style.fontSize = 50;
         style.normal.textColor = Color.white;
 
-        GUI.Label(new Rect(20,20,500,100),$"State : {currentState}",style);
+        //GUI.Label(new Rect(20,20,500,100),$"State : {currentState}",style);
 
         if (isTouching)
         {

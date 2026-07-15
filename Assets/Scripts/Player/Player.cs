@@ -46,6 +46,10 @@ public class Player : MonoBehaviour
     [SerializeField] private AudioClip hitClip;
     [SerializeField] private AudioSource audioSource;
 
+    [Header("Dodge")]
+    [SerializeField] private float dodgeDistance = 0.7f;
+    [SerializeField] private float dodgeDuration = 0.12f;
+
     public int CurrentHP {  get; private set; }
 
     public int MaxHP => maxHP;
@@ -103,6 +107,8 @@ public class Player : MonoBehaviour
         LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
 
+        StartCoroutine(DodgeMove(Vector3.left));
+
         Debug.Log("Dodge Left");
     }
 
@@ -114,6 +120,8 @@ public class Player : MonoBehaviour
         LastDodgeDirection = DodgeDirection.Right;
         LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
+
+        StartCoroutine(DodgeMove(Vector3.right));
 
         Debug.Log("Doge Right");
     }
@@ -197,5 +205,33 @@ public class Player : MonoBehaviour
     public void IsDead()
     {
         GameManager.instance.Lose();
+    }
+
+    private IEnumerator DodgeMove(Vector3 direction)
+    {
+        Vector3 startPos = transform.position;
+        Vector3 dodgePos = startPos + direction * dodgeDistance;
+
+        float timer = 0f;
+
+        // ‘O‚Ö
+        while(timer < dodgeDistance)
+        {
+            timer += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPos, dodgePos, timer / dodgeDuration);
+            yield return null;
+        }
+
+        timer = 0f;
+
+        // Œ³‚É–ß‚é
+        while (timer < dodgeDistance)
+        {
+            timer += Time.deltaTime;
+            transform.position = Vector3.Lerp(dodgePos,startPos, timer / dodgeDuration);
+            yield return null;
+        }
+
+        transform.position = startPos;
     }
 }
