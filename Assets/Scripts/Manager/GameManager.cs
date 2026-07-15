@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Playables;
 
 public enum GameState
 {
@@ -14,8 +15,16 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
+    [Header("èüóòÅEîsñkÉpÉlÉã")]
     [SerializeField] GameObject WinPanel;
     [SerializeField] GameObject LosePanel;
+
+    [Header("TimeLine")]
+    [SerializeField] private PlayableDirector director;
+    [SerializeField] private PlayableAsset winTimeline;
+    [SerializeField] private PlayableAsset loseTimeline;
+
+    [SerializeField] private Player player;
 
     public GameState currentState { get; private set; }
 
@@ -32,6 +41,7 @@ public class GameManager : MonoBehaviour
     private void StartGame()
     {
         currentState = GameState.Playing;
+
         WinPanel.SetActive(false);
         LosePanel.SetActive(false);
     }
@@ -42,8 +52,17 @@ public class GameManager : MonoBehaviour
     public void Win()
     {
         currentState = GameState.Win;
+
+        player.PlayWinAnimation();
+
+        director.playableAsset = winTimeline;
+        director.Play();
+    }
+
+    public void ShowWinResult()
+    {
         WinPanel.SetActive(true);
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
     }
 
     /// <summary>
@@ -52,6 +71,13 @@ public class GameManager : MonoBehaviour
     public void Lose()
     {
         currentState=GameState.Lose;
+
+        director.playableAsset = loseTimeline;
+        director.Play();
+    }
+
+    public void ShowLoseResult()
+    {
         LosePanel.SetActive(true);
         Time.timeScale = 0f;
     }

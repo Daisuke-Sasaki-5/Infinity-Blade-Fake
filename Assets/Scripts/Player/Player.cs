@@ -187,6 +187,13 @@ public class Player : MonoBehaviour
         Instantiate(effectPrefab, effectPos, Quaternion.identity);
     }
 
+    public void PlayWinAnimation()
+    {
+        CurrentState = PlayerState.Idle;
+
+        animator.SetTrigger("Win");
+    }
+
     public void IsDead()
     {
         GameManager.instance.Lose();

@@ -67,6 +67,11 @@ public class Enemy : MonoBehaviour
     {
         while (true)
         {
+         if(GameManager.instance.currentState == GameState.Win || GameManager.instance.currentState == GameState.Lose)
+            {
+                yield break;
+            }
+
             // ƒXƒ^ƒ“’†‚ÍUŒ‚‚µ‚È‚¢
             if(CurrentState == EnemyState.Stunned)
             {
@@ -82,6 +87,11 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator AttackSequence()
     {
+        if (GameManager.instance.currentState == GameState.Win || GameManager.instance.currentState == GameState.Lose)
+        {
+            yield break;
+        }
+
         attackFinished = false;
 
         CurrentState = EnemyState.PrepareAttack;
@@ -94,6 +104,9 @@ public class Enemy : MonoBehaviour
         animator.speed = 0.3f;
         animator.SetTrigger("Attack");
         yield return StartCoroutine(PrepareAttack(1));
+
+        if (GameManager.instance.currentState != GameState.Playing)
+            yield break;
 
         CurrentState = EnemyState.Attack;
 
