@@ -475,7 +475,6 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
-  - component: {fileID: 330585548}
   - component: {fileID: 330585549}
   m_Layer: 0
   m_Name: Main Camera
@@ -602,20 +601,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!114 &330585548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330585543}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5c965327ca370c439f2bed5d9f487c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
-  duration: 0.15
-  magnitude: 0.15
 --- !u!114 &330585549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3132,13 +3117,14 @@ GameObject:
   - component: {fileID: 899499689}
   - component: {fileID: 899499688}
   - component: {fileID: 899499690}
+  - component: {fileID: 899499691}
   m_Layer: 0
   m_Name: VCam_Lose
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &899499688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3190,13 +3176,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 899499687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.13, z: -1.36}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -0.1, y: 0.5, z: -0.07}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0.234071, y: -1.421085e-13, z: 0}
 --- !u!114 &899499690
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3212,6 +3198,28 @@ MonoBehaviour:
   m_Events:
     m_Signals: []
     m_Events: []
+--- !u!95 &899499691
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 899499687}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1032742106
 GameObject:
   m_ObjectHideFlags: 0
@@ -4385,7 +4393,7 @@ PlayableDirector:
   m_GameObject: {fileID: 1622278232}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 11400000, guid: 966efcfd9486f8a44a04aa76330f295a, type: 2}
+  m_PlayableAsset: {fileID: 0}
   m_InitialState: 0
   m_WrapMode: 0
   m_DirectorUpdateMode: 1
@@ -4399,6 +4407,10 @@ PlayableDirector:
     value: {fileID: 330585549}
   - key: {fileID: 1425833166074408752, guid: 966efcfd9486f8a44a04aa76330f295a, type: 2}
     value: {fileID: 328847225}
+  - key: {fileID: -1687065044653662955, guid: 21eb8876be484814f9d8516b1a495251, type: 2}
+    value: {fileID: 1802682473}
+  - key: {fileID: 2494683398325307229, guid: 21eb8876be484814f9d8516b1a495251, type: 2}
+    value: {fileID: 899499691}
   m_ExposedReferences:
     m_References:
     - aacbfebf85a5cd546a219b36bec18b4c: {fileID: 899499688}
@@ -4532,7 +4544,7 @@ MonoBehaviour:
   stunTimer: 2
   animator: {fileID: 1798924239}
   maxHP: 100
-  damage: 10
+  damage: 50
   effectPrefab: {fileID: 848807539254248473, guid: 41bc20e69bf836849b32cc01635a6357, type: 3}
 --- !u!95 &1798924239 stripped
 Animator:
@@ -4831,6 +4843,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1943416891}
   - component: {fileID: 1943416890}
+  - component: {fileID: 1943416892}
   m_Layer: 0
   m_Name: VCam_Game
   m_TagString: Untagged
@@ -4896,6 +4909,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 24.188, z: 0}
+--- !u!114 &1943416892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943416889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b5c965327ca370c439f2bed5d9f487c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
+  duration: 0.15
+  magnitude: 0.15
 --- !u!114 &209621163462206074
 MonoBehaviour:
   m_ObjectHideFlags: 0
