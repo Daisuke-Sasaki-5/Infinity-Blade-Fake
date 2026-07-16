@@ -80,11 +80,11 @@ public class MobileInputVisualizer : MonoBehaviour
 
             holdTimer += Time.deltaTime;
 
-            if(!isGuarding && holdTimer >= holdTimeThershold)
+            if (!isGuarding && holdTimer >= holdTimeThershold)
             {
                 isGuarding = true;
                 currentState = "Guard";
-                player.StartGuard();
+                player.StartParry();
             }
         }
 
@@ -99,7 +99,7 @@ public class MobileInputVisualizer : MonoBehaviour
             if (isGuarding)
             {
                 currentState = "Guard End";
-                player.EndGuard();
+                player.EndParry();
             }
             else
             {
@@ -160,7 +160,7 @@ public class MobileInputVisualizer : MonoBehaviour
             {
                 isGuarding = true;
                 currentState = "Guard";
-                player.StartGuard();
+                player.StartParry();
             }
         }
 
@@ -175,7 +175,7 @@ public class MobileInputVisualizer : MonoBehaviour
             if (isGuarding)
             {
                 currentState = "Guard End";
-                player.EndGuard();
+                player.EndParry();
             }
             else
             {

@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
     private bool ISSuccessDodge()
     {
         bool timing = Time.time - player.LastDodgeTime <= 0.2f;
-        bool GuradTiming = Time.time - player.LastGuradTime <= 0.2f;
+        bool ParryTiming = Time.time - player.LastParryTime <= 0.2f;
 
         switch (CurrentAttackDirection)
         {
@@ -163,7 +163,7 @@ public class Enemy : MonoBehaviour
                 return timing && player.LastDodgeDirection == DodgeDirection.Left;
 
             case EnemyAttackDirection.Center:
-                return GuradTiming && player.CurrentState == PlayerState.Guard;
+                return ParryTiming && player.CurrentState == PlayerState.Parry;
         }
 
         return false;
@@ -199,10 +199,15 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("Success");
 
+            if (CurrentAttackDirection == EnemyAttackDirection.Center)
+            {
+                player.PlayerParryEffect();
+            }
+
             StartCoroutine(StunRoutine());
 
             player.ClearDodge();
-            player.EndGuard();
+            player.EndParry();
 
             return;
         }

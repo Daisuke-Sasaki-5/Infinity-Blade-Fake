@@ -1417,6 +1417,7 @@ MonoBehaviour:
   maxHP: 100
   damage: 20
   effectPrefab: {fileID: 848807539254248473, guid: 28dfeac02641da349b3da5a055858d16, type: 3}
+  parryeffectPrefab: {fileID: 5198295942611120393, guid: 53262a145e31ef6409a86c376d412d98, type: 3}
   hitClip: {fileID: 8300000, guid: aaa6e22c828299b4c8db9d18243d5bb1, type: 3}
   audioSource: {fileID: 612629412}
   dodgeDistance: 0.7

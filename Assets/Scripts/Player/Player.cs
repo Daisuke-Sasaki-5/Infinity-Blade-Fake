@@ -8,7 +8,7 @@ public enum PlayerState
 {
     Idle,   // 待機
     Attack, // 攻撃中
-    Guard,  // ガード中
+    Parry,  // パリィ
     Dodge,  // 回避中
     Dead    // 死亡
 }
@@ -29,7 +29,7 @@ public class Player : MonoBehaviour
     public DodgeDirection LastDodgeDirection { get; private set; }
 
     public float LastDodgeTime { get; private set; }
-    public float LastGuradTime { get; private set; }
+    public float LastParryTime { get; private set; }
 
     [SerializeField] private Animator animator;
     [SerializeField] private Enemy enemy;
@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
     [Header("ヒットエフェクト")]
     [SerializeField] private GameObject effectPrefab;
 
+    [Header("パリィエフェクト")]
+    [SerializeField] private GameObject parryeffectPrefab;
+
     [Header("SE")]
     [SerializeField] private AudioClip hitClip;
     [SerializeField] private AudioSource audioSource;
@@ -49,6 +52,8 @@ public class Player : MonoBehaviour
     [Header("Dodge")]
     [SerializeField] private float dodgeDistance = 0.7f;
     [SerializeField] private float dodgeDuration = 0.12f;
+
+    private bool isDodgeing;
 
     public int CurrentHP {  get; private set; }
 
@@ -103,6 +108,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public void DodgeLeft()
     {
+        if (isDodgeing) return;
+        isDodgeing = true;
+
         LastDodgeDirection = DodgeDirection.Left;
         LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
@@ -117,6 +125,9 @@ public class Player : MonoBehaviour
     /// </summary>
     public void DodgeRight()
     {
+        if (isDodgeing) return;
+        isDodgeing = true;
+
         LastDodgeDirection = DodgeDirection.Right;
         LastDodgeTime = Time.time;
         CurrentState = PlayerState.Dodge;
@@ -139,18 +150,18 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void StartGuard()
+    public void StartParry()
     {
-        LastGuradTime = Time.time;
-        CurrentState = PlayerState.Guard;
+        LastParryTime = Time.time;
+        CurrentState = PlayerState.Parry;
         animator.SetBool("Guard", true);
 
         Debug.Log("Guard");
     }
 
-    public void EndGuard()
+    public void EndParry()
     {
-        if(CurrentState == PlayerState.Guard)
+        if(CurrentState == PlayerState.Parry)
         {
             CurrentState = PlayerState.Idle;
             animator.SetBool("Guard", false);
@@ -215,7 +226,7 @@ public class Player : MonoBehaviour
         float timer = 0f;
 
         // 前へ
-        while(timer < dodgeDistance)
+        while(timer < dodgeDuration)
         {
             timer += Time.deltaTime;
             transform.position = Vector3.Lerp(startPos, dodgePos, timer / dodgeDuration);
@@ -225,7 +236,7 @@ public class Player : MonoBehaviour
         timer = 0f;
 
         // 元に戻る
-        while (timer < dodgeDistance)
+        while (timer < dodgeDuration)
         {
             timer += Time.deltaTime;
             transform.position = Vector3.Lerp(dodgePos,startPos, timer / dodgeDuration);
@@ -233,5 +244,16 @@ public class Player : MonoBehaviour
         }
 
         transform.position = startPos;
+        CurrentState = PlayerState.Idle;
+        isDodgeing = false;
+    }
+
+    /// <summary>
+    /// パリィエフェクトの生成
+    /// </summary>
+    public void PlayerParryEffect()
+    {
+        Vector3 effectPos = transform.position + Vector3.up * 1.0f;
+        Instantiate(parryeffectPrefab,effectPos,Quaternion.identity);
     }
 }
