@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private Player player;
 
+    [SerializeField] private AudioSource bgmsource;
+    [SerializeField] private AudioClip bgmClip;
+
     public GameState currentState { get; private set; }
 
     private void Awake()
@@ -44,6 +47,10 @@ public class GameManager : MonoBehaviour
 
         WinPanel.SetActive(false);
         LosePanel.SetActive(false);
+
+        bgmsource.clip = bgmClip;
+        bgmsource.loop = true;
+        bgmsource.Play();
     }
 
     /// <summary>
