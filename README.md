@@ -5,10 +5,10 @@
 
 # 操作方法
 * 攻撃：スワイプ
-* ガード：中央長押し
+* パリィ：中央長押し
 * 回避：左右ボタン
 
 # 工夫したポイント
 * 攻撃のアニメーションに合わせたヒットエフェクトの生成
 
-<img width="1000" height="600" alt="image" src="https://github.com/user-attachments/assets/cc09e8bc-58ed-4073-a361-760e0dcf5699" />
+<img width="1616" height="914" alt="image" src="https://github.com/user-attachments/assets/1f4d4285-aec4-4fb6-b67e-a6f99ca08acf" />
